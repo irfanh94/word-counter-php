@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace WordCounter\Language;
+namespace WordCounter\Script;
 
 use WordCounter\CharacterUnicodeCollection;
-use WordCounter\Contract\LanguageInterface;
+use WordCounter\Contract\ScriptInterface;
 
-class ArabicLanguage implements LanguageInterface {
+class ArabicScript implements ScriptInterface {
 
     public function getWordUnicodeCollection(): CharacterUnicodeCollection {
         $collection = new CharacterUnicodeCollection();

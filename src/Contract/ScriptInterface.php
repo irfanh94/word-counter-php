@@ -6,7 +6,7 @@ namespace WordCounter\Contract;
 
 use WordCounter\CharacterUnicodeCollection;
 
-interface LanguageInterface {
+interface ScriptInterface {
 
     public function getWordUnicodeCollection(): CharacterUnicodeCollection;
 

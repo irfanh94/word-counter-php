@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace WordCounter;
 
-use WordCounter\Contract\LanguageInterface;
-use WordCounter\Helper\LanguageRegistry;
+use WordCounter\Contract\ScriptInterface;
+use WordCounter\Helper\ScriptRegistry;
 use function mb_substr;
 use function mb_ord;
 
@@ -14,10 +14,10 @@ final class WordCounter {
     private array $supportedUnicodeMap = [];
 
     public function __construct() {
-        $supportedLanguages = LanguageRegistry::getAllLanguages();
+        $supportedScripts = ScriptRegistry::getAllScripts();
 
-        foreach ($supportedLanguages as $supportedLanguage) {
-            $this->registerLanguage($supportedLanguage);
+        foreach ($supportedScripts as $supportedScript) {
+            $this->registerScript($supportedScript);
         }
     }
 
@@ -58,13 +58,15 @@ final class WordCounter {
         return new WordCounterResult($wordCount, $wordList);
     }
 
-    public function registerLanguage(LanguageInterface $language): void {
-        foreach ($language->getWordUnicodeCollection()->getUnicodeList() as $unicode) {
+    public function registerScript(ScriptInterface $script): void {
+        $unicodeList = $script->getWordUnicodeCollection()->getUnicodeList();
+
+        foreach ($unicodeList as $unicode) {
             if (!isset($this->supportedUnicodeMap[$unicode])) {
                 $this->supportedUnicodeMap[$unicode] = [];
             }
 
-            $this->supportedUnicodeMap[$unicode][] = $language;
+            $this->supportedUnicodeMap[$unicode][] = $script;
         }
     }
 }
