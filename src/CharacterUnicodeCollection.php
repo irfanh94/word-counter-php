@@ -8,7 +8,7 @@ use function in_array;
 
 class CharacterUnicodeCollection {
 
-    private array $unicodeList = [];
+    private array $list = [];
 
     public function addRange(int $from, int $to): self {
         for ($unicode = $from; $unicode <= $to; $unicode++) {
@@ -27,15 +27,15 @@ class CharacterUnicodeCollection {
     }
 
     public function add(int $unicode): self {
-        if (!in_array($unicode, $this->unicodeList, true)) {
-            $this->unicodeList[] = $unicode;
+        if (!in_array($unicode, $this->list, true)) {
+            $this->list[] = $unicode;
         }
 
         return $this;
     }
 
-    public function getUnicodeList(): array {
-        return $this->unicodeList;
+    public function getList(): array {
+        return $this->list;
     }
 
 }

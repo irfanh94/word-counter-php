@@ -9,7 +9,7 @@ use WordCounter\Contract\ScriptInterface;
 
 class ArabicScript implements ScriptInterface {
 
-    public function getWordUnicodeCollection(): CharacterUnicodeCollection {
+    public function getCharacterUnicodeCollection(): CharacterUnicodeCollection {
         $collection = new CharacterUnicodeCollection();
 
         $collection

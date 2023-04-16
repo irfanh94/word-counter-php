@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace WordCounter\Tests\Unit;
+namespace WordCounter\Tests\Unit\WordCounter;
 
 use PHPUnit\Framework\TestCase;
 use WordCounter\WordCounter;
 
-class WordCounterTest extends TestCase {
+class ArabicScriptTest extends TestCase {
 
     private WordCounter $wordCounter;
 
@@ -27,7 +27,7 @@ class WordCounterTest extends TestCase {
 
     public static function wordCounterData(): array {
         return [
-            'arabicScript' => [
+            'arabicLanguage' => [
                 'text' => 'مرحبًا ، هذا اختبار اللغة العربية مع. سيتضمن هذا الاختبار: عدد 123 كلمة و 123 كلمة في القائمة.',
                 'expectedCount' => 18,
                 'expectedWords' => [
@@ -53,4 +53,5 @@ class WordCounterTest extends TestCase {
             ]
         ];
     }
+
 }

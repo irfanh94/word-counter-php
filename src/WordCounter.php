@@ -6,8 +6,9 @@ namespace WordCounter;
 
 use WordCounter\Contract\ScriptInterface;
 use WordCounter\Helper\ScriptRegistry;
+use function bin2hex;
+use function hexdec;
 use function mb_substr;
-use function mb_ord;
 
 final class WordCounter {
 
@@ -31,7 +32,7 @@ final class WordCounter {
 
         for ($charIndex = 0; $charIndex < $textLength; $charIndex++) {
             $character = mb_substr($text, $charIndex, 1, $encoding);
-            $charCode = mb_ord($character, 'UTF-8');
+            $charCode = hexdec(bin2hex($character));
             $isWordCharacter = isset($this->supportedUnicodeMap[$charCode]);
 
             if ($isWordCharacter) {
@@ -59,7 +60,7 @@ final class WordCounter {
     }
 
     public function registerScript(ScriptInterface $script): void {
-        $unicodeList = $script->getWordUnicodeCollection()->getUnicodeList();
+        $unicodeList = $script->getCharacterUnicodeCollection()->getList();
 
         foreach ($unicodeList as $unicode) {
             if (!isset($this->supportedUnicodeMap[$unicode])) {
