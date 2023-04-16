@@ -58,6 +58,21 @@ class LatinScriptTest extends TestCase {
                     '123',
                     'palavras',
                 ]
+            ],
+            'germanLanguage' => [
+                'text' => 'Englisch Sprachtest. Es enthält: 123 Zahlen und 123 Wörter.',
+                'expectedCount' => 9,
+                'expectedWords' => [
+                    'Englisch',
+                    'Sprachtest',
+                    'Es',
+                    'enthält',
+                    '123',
+                    'Zahlen',
+                    'und',
+                    '123',
+                    'Wörter',
+                ]
             ]
         ];
     }
