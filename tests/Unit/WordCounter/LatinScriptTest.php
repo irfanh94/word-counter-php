@@ -73,6 +73,22 @@ class LatinScriptTest extends TestCase {
                     '123',
                     'Wörter',
                 ]
+            ],
+            'bosnianLanguage' => [
+                'text' => 'Test iz engleskog jezika. Sadrži: 123 broja i 123 riječi.',
+                'expectedCount' => 10,
+                'expectedWords' => [
+                    'Test',
+                    'iz',
+                    'engleskog',
+                    'jezika',
+                    'Sadrži',
+                    '123',
+                    'broja',
+                    'i',
+                    '123',
+                    'riječi',
+                ]
             ]
         ];
     }
