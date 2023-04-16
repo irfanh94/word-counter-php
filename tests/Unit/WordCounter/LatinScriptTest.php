@@ -89,6 +89,22 @@ class LatinScriptTest extends TestCase {
                     '123',
                     'riječi',
                 ]
+            ],
+            'czechLanguage' => [
+                'text' => 'Zkouška z anglického jazyka. Obsahuje: 123 čísel a 123 slov.',
+                'expectedCount' => 10,
+                'expectedWords' => [
+                    'Zkouška',
+                    'z',
+                    'anglického',
+                    'jazyka',
+                    'Obsahuje',
+                    '123',
+                    'čísel',
+                    'a',
+                    '123',
+                    'slov',
+                ]
             ]
         ];
     }
