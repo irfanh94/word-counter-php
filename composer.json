@@ -1,0 +1,40 @@
+{
+  "name": "irfanh94/word-count-php",
+  "description": "Correct word count for all languages in PHP",
+  "license": "MIT",
+  "type": "library",
+  "keywords": [
+    "word",
+    "count",
+    "php"
+  ],
+  "authors": [
+    {
+      "name": "Irfan Hodzic",
+      "homepage": "https://github.com/irfanh94"
+    }
+  ],
+  "homepage": "https://github.com/irfanh94/word-count-php",
+  "require": {
+    "php": ">=7.4",
+    "ext-mbstring": "*"
+  },
+  "require-dev": {
+    "phpunit/phpunit": ">=9.6"
+  },
+  "autoload": {
+    "psr-4": {
+      "WordCounter\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "WordCounter\\Tests\\": "src/"
+    }
+  },
+  "scripts": {
+    "test": [
+      "@php vendor/bin/phpunit"
+    ]
+  }
+}
