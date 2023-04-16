@@ -8,6 +8,6 @@ use WordCounter\CharacterUnicodeCollection;
 
 interface ScriptInterface {
 
-    public function getWordUnicodeCollection(): CharacterUnicodeCollection;
+    public function getCharacterUnicodeCollection(): CharacterUnicodeCollection;
 
 }
