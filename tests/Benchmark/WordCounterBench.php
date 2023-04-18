@@ -13,7 +13,7 @@ class WordCounterBench {
     public function benchWordCounter(): void {
         $wordCounter = new WordCounter();
         $wordCounter
-            ->registerAllScripts()
+            ->registerAllScriptsFromRegistry()
             ->count($this->text);
     }
 

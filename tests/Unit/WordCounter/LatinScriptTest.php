@@ -15,7 +15,7 @@ class LatinScriptTest extends TestCase {
         parent::setUp();
 
         $this->wordCounter = new WordCounter();
-        $this->wordCounter->registerAllScripts();
+        $this->wordCounter->registerAllScriptsFromRegistry();
     }
 
     /** @dataProvider wordCounterData */
