@@ -12,7 +12,7 @@ final class WordCounter {
 
     private array $supportedUnicodeMap = [];
 
-    public function count(string $text, bool $exportWords = false, string $encoding = 'UTF-8'): WordCounterResult {
+    public function process(string $text, bool $exportWords = false, string $encoding = 'UTF-8'): WordCounterResult {
         $wordCount = 0;
         $wordList = [];
 
