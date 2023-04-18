@@ -12,14 +12,6 @@ final class WordCounter {
 
     private array $supportedUnicodeMap = [];
 
-    public function __construct() {
-        $supportedScripts = ScriptRegistry::getAllScripts();
-
-        foreach ($supportedScripts as $supportedScript) {
-            $this->registerScript($supportedScript);
-        }
-    }
-
     public function count(string $text, bool $exportWords = false, string $encoding = 'UTF-8'): WordCounterResult {
         $wordCount = 0;
         $wordList = [];
@@ -41,7 +33,17 @@ final class WordCounter {
         return new WordCounterResult($wordCount, $wordList);
     }
 
-    public function registerScript(ScriptInterface $script): void {
+    public function registerAllScripts(): self {
+        $supportedScripts = ScriptRegistry::getAllScripts();
+
+        foreach ($supportedScripts as $supportedScript) {
+            $this->registerScript($supportedScript);
+        }
+
+        return $this;
+    }
+
+    public function registerScript(ScriptInterface $script): self {
         $unicodeList = $script->getCharacterUnicodeCollection()->getList();
 
         foreach ($unicodeList as $unicode) {
@@ -51,6 +53,8 @@ final class WordCounter {
 
             $this->supportedUnicodeMap[$unicode][] = $script;
         }
+
+        return $this;
     }
 
     private function onCharacterMatch(int $currentCharacterCode, ?int $previousCharacterCode): bool {
