@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace WordCounter;
 
 use WordCounter\Contract\ScriptInterface;
+use WordCounter\Helper\NonPrintableCharacters;
 use WordCounter\Helper\ScriptRegistry;
-use function bin2hex;
-use function hexdec;
-use function mb_substr;
 
 final class WordCounter {
 
@@ -25,36 +23,20 @@ final class WordCounter {
     public function count(string $text, bool $exportWords = false, string $encoding = 'UTF-8'): WordCounterResult {
         $wordCount = 0;
         $wordList = [];
-        $wordTemporary = '';
 
-        $textLength = mb_strlen($text, $encoding);
-        $inWord = false;
-
-        for ($charIndex = 0; $charIndex < $textLength; $charIndex++) {
-            $character = mb_substr($text, $charIndex, 1, $encoding);
-            $charCode = hexdec(bin2hex($character));
-            $isWordCharacter = isset($this->supportedUnicodeMap[$charCode]);
-
-            if ($isWordCharacter) {
-                $inWord = true;
-            } elseif ($inWord) {
+        $textAnalyzer = new TextAnalyzer($text, $encoding);
+        $textAnalyzer->analyze(
+            function (int $currentCharacterCode, ?int $previousCharacterCode): bool {
+                return $this->onCharacterMatch($currentCharacterCode, $previousCharacterCode);
+            },
+            static function (string $word) use (&$wordCount, &$wordList, $exportWords): void {
                 $wordCount++;
-                $inWord = false;
 
                 if ($exportWords) {
-                    $wordList[] = $wordTemporary;
-                    $wordTemporary = '';
+                    $wordList[] = $word;
                 }
             }
-
-            if ($inWord && $exportWords) {
-                $wordTemporary .= $character;
-            }
-        }
-
-        if ($inWord) {
-            $wordCount++;
-        }
+        );
 
         return new WordCounterResult($wordCount, $wordList);
     }
@@ -69,5 +51,17 @@ final class WordCounter {
 
             $this->supportedUnicodeMap[$unicode][] = $script;
         }
+    }
+
+    private function onCharacterMatch(int $currentCharacterCode, ?int $previousCharacterCode): bool {
+        if (
+            $currentCharacterCode === NonPrintableCharacters::ZWJ
+            && $previousCharacterCode
+            && isset($this->supportedUnicodeMap[$previousCharacterCode])
+        ) {
+            return true;
+        }
+
+        return isset($this->supportedUnicodeMap[$currentCharacterCode]);
     }
 }

@@ -11,16 +11,15 @@ class ArabicScript implements ScriptInterface {
 
     public function getCharacterUnicodeCollection(): CharacterUnicodeCollection {
         $collection = new CharacterUnicodeCollection();
-
         $collection
-            ->addRange(0x30, 0x39) // Arabic numbers
-            ->addRange(0x621, 0x63a) // Arabic script
-            ->addRange(0x640, 0x64a) // Arabic script
-            ->addRange(0x6f0, 0x6f9) // Eastern Arabic numbers
-            ->addRange(0x6fa, 0x6fc) // Arabic script
-            ->add(0x6ff) // Arabic letter mark
-            ->add(0x66f); // Arabic letter dotless final beh
-
+            ->addRange(0x0621, 0x063a) // letters
+            ->addRange(0x0641, 0x064b) // letters
+            ->addRange(0x066e, 0x066f) // letters
+            ->addRange(0x0671, 0x06d3) // letters
+            ->addRange(0x06fa, 0x06fc) // letters
+            ->add(0x06ff) // letter
+            ->addRange(0x0750, 0x077f) // supplement letters
+            ->addRange(0x08a0, 0x08ff); // extended-a letters
 
         return $collection;
     }

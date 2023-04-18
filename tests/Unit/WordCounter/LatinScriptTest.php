@@ -58,6 +58,70 @@ class LatinScriptTest extends TestCase {
                     '123',
                     'palavras',
                 ]
+            ],
+            'germanLanguage' => [
+                'text' => 'Die 3. Auf‌lage des Buches ist ab sofort erhältlich. Diese Version enthält viele neue Erkenntnisse und Informationen, die für Leserinnen und Leser sehr interessant sein könnten',
+                'expectedCount' => 26,
+                'expectedWords' => [
+                    'Die',
+                    '3',
+                    'Auf‌lage',
+                    'des',
+                    'Buches',
+                    'ist',
+                    'ab',
+                    'sofort',
+                    'erhältlich',
+                    'Diese',
+                    'Version',
+                    'enthält',
+                    'viele',
+                    'neue',
+                    'Erkenntnisse',
+                    'und',
+                    'Informationen',
+                    'die',
+                    'für',
+                    'Leserinnen',
+                    'und',
+                    'Leser',
+                    'sehr',
+                    'interessant',
+                    'sein',
+                    'könnten'
+                ]
+            ],
+            'bosnianLanguage' => [
+                'text' => 'Test iz engleskog jezika. Sadrži: 123 broja i 123 riječi.',
+                'expectedCount' => 10,
+                'expectedWords' => [
+                    'Test',
+                    'iz',
+                    'engleskog',
+                    'jezika',
+                    'Sadrži',
+                    '123',
+                    'broja',
+                    'i',
+                    '123',
+                    'riječi',
+                ]
+            ],
+            'czechLanguage' => [
+                'text' => 'Zkouška z anglického jazyka. Obsahuje: 123 čísel a 123 slov.',
+                'expectedCount' => 10,
+                'expectedWords' => [
+                    'Zkouška',
+                    'z',
+                    'anglického',
+                    'jazyka',
+                    'Obsahuje',
+                    '123',
+                    'čísel',
+                    'a',
+                    '123',
+                    'slov',
+                ]
             ]
         ];
     }
