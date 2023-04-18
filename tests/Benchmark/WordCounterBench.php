@@ -14,7 +14,7 @@ class WordCounterBench {
         $wordCounter = new WordCounter();
         $wordCounter
             ->registerAllScriptsFromRegistry()
-            ->count($this->text);
+            ->process($this->text);
     }
 
     public function benchPregSplit(): void {
