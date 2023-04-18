@@ -33,7 +33,7 @@ final class WordCounter {
         return new WordCounterResult($wordCount, $wordList);
     }
 
-    public function registerAllScripts(): self {
+    public function registerAllScriptsFromRegistry(): self {
         $supportedScripts = ScriptRegistry::getAllScripts();
 
         foreach ($supportedScripts as $supportedScript) {

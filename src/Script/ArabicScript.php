@@ -14,6 +14,7 @@ class ArabicScript implements ScriptInterface {
         $collection
             ->addRange(0x0621, 0x063a) // letters
             ->addRange(0x0641, 0x064b) // letters
+            ->addRange(0x0660, 0x0669) // numbers
             ->addRange(0x066e, 0x066f) // letters
             ->addRange(0x0671, 0x06d3) // letters
             ->addRange(0x06fa, 0x06fc) // letters
