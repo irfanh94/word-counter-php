@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace WordCounter\Contract;
 
-use WordCounter\CharacterUnicodeCollection;
+use WordCounter\CharacterCollection;
 
 interface ScriptInterface {
 
-    public function getCharacterUnicodeCollection(): CharacterUnicodeCollection;
+    public function getCharacterCollection(): CharacterCollection;
 
 }

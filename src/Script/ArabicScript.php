@@ -4,23 +4,42 @@ declare(strict_types=1);
 
 namespace WordCounter\Script;
 
-use WordCounter\CharacterUnicodeCollection;
+use WordCounter\CharacterCollection;
 use WordCounter\Contract\ScriptInterface;
 
 class ArabicScript implements ScriptInterface {
 
-    public function getCharacterUnicodeCollection(): CharacterUnicodeCollection {
-        $collection = new CharacterUnicodeCollection();
+    public function getCharacterCollection(): CharacterCollection {
+        $collection = new CharacterCollection();
         $collection
-            ->addRange(0x0621, 0x063a) // letters
-            ->addRange(0x0641, 0x064b) // letters
-            ->addRange(0x0660, 0x0669) // numbers
-            ->addRange(0x066e, 0x066f) // letters
-            ->addRange(0x0671, 0x06d3) // letters
-            ->addRange(0x06fa, 0x06fc) // letters
-            ->add(0x06ff) // letter
-            ->addRange(0x0750, 0x077f) // supplement letters
-            ->addRange(0x08a0, 0x08ff); // extended-a letters
+            ->add([
+                // numbers
+                '٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩',
+
+                // letters
+                'ء', 'آ', 'أ', 'ؤ', 'إ', 'ئ', 'ا', 'ب', 'ة', 'ت', 'ث', 'ج', 'ح', 'خ', 'د', 'ذ',
+                'ر', 'ز', 'س', 'ش', 'ص', 'ض', 'ط', 'ظ', 'ع', 'غ', "\u{064b}", 'ف', 'ق', 'ك', 'ل', 'م', 'ن',
+                'ه', 'و', 'ى', 'ي', 'ٮ', 'ٯ', 'ٱ', 'ٲ', 'ٳ', 'ٴ', 'ٵ', 'ٶ', 'ٷ', 'ٸ', 'ٹ', 'ٺ',
+                'ٻ', 'ټ', 'ٽ', 'پ', 'ٿ', 'ڀ', 'ځ', 'ڂ', 'ڃ', 'ڄ', 'څ', 'چ', 'ڇ', 'ڈ', 'ډ', 'ڊ',
+                'ڋ', 'ڌ', 'ڍ', 'ڎ', 'ڏ', 'ڐ', 'ڑ', 'ڒ', 'ړ', 'ڔ', 'ڕ', 'ږ', 'ڗ', 'ژ', 'ڙ', 'ښ',
+                'ڛ', 'ڜ', 'ڝ', 'ڞ', 'ڟ', 'ڠ', 'ڡ', 'ڢ', 'ڣ', 'ڤ', 'ڥ', 'ڦ', 'ڧ', 'ڨ', 'ک', 'ڪ',
+                'ګ', 'ڬ', 'ڭ', 'ڮ', 'گ', 'ڰ', 'ڱ', 'ڲ', 'ڳ', 'ڴ', 'ڵ', 'ڶ', 'ڷ', 'ڸ', 'ڹ', 'ں',
+                'ڻ', 'ڼ', 'ڽ', 'ھ', 'ڿ', 'ۀ', 'ہ', 'ۂ', 'ۃ', 'ۄ', 'ۅ', 'ۆ', 'ۇ', 'ۈ', 'ۉ', 'ۊ',
+                'ۋ', 'ی', 'ۍ', 'ێ', 'ۏ', 'ې', 'ۑ', 'ے', 'ۓ', 'ۺ', 'ۻ', 'ۼ', 'ۿ',
+
+                // supplement letters
+                'ݐ', 'ݑ', 'ݒ', 'ݓ', 'ݔ', 'ݕ', 'ݖ', 'ݗ', 'ݘ', 'ݙ', 'ݚ', 'ݛ', 'ݜ', 'ݝ', 'ݞ', 'ݟ',
+                'ݠ', 'ݡ', 'ݢ', 'ݣ', 'ݤ', 'ݥ', 'ݦ', 'ݧ', 'ݨ', 'ݩ', 'ݪ', 'ݫ', 'ݬ', 'ݭ', 'ݮ', 'ݯ',
+                'ݰ', 'ݱ', 'ݲ', 'ݳ', 'ݴ', 'ݵ', 'ݶ', 'ݷ', 'ݸ', 'ݹ', 'ݺ', 'ݻ', 'ݼ', 'ݽ', 'ݾ', 'ݿ',
+
+                // extended-a letters
+                'ࢠ', 'ࢡ', 'ࢢ', 'ࢣ', 'ࢤ', 'ࢥ', 'ࢦ', 'ࢧ', 'ࢨ', 'ࢩ', 'ࢪ', 'ࢫ', 'ࢬ', 'ࢭ', 'ࢮ', 'ࢯ',
+                'ࢰ', 'ࢱ', 'ࢲ', 'ࢳ', 'ࢴ', 'ࢵ', 'ࢶ', 'ࢷ', 'ࢸ', 'ࢹ', 'ࢺ', 'ࢻ', 'ࢼ', 'ࢽ', 'ࢾ', 'ࢿ',
+                'ࣀ', 'ࣁ', 'ࣂ', 'ࣃ', 'ࣄ', 'ࣅ', 'ࣆ', 'ࣇ', 'ࣈ', 'ࣉ', '࣊', '࣋', '࣌', '࣍', '࣎', '࣏', '࣐',
+                '࣑', '࣒', '࣓', 'ࣔ', 'ࣕ', 'ࣖ', 'ࣗ', 'ࣘ', 'ࣙ', 'ࣚ', 'ࣛ', 'ࣜ', 'ࣝ', 'ࣞ', 'ࣟ', '࣠', '࣡', '࣢',
+                'ࣣ', 'ࣤ', 'ࣥ', 'ࣦ', 'ࣧ', 'ࣨ', 'ࣩ', '࣪', '࣫', '࣬', '࣭', '࣮', '࣯', 'ࣰ', 'ࣱ', 'ࣲ', 'ࣳ', 'ࣴ', 'ࣵ', 'ࣶ', 'ࣷ',
+                'ࣸ', 'ࣹ', 'ࣺ', 'ࣻ', 'ࣼ', 'ࣽ', 'ࣾ', 'ࣿ',
+            ]);
 
         return $collection;
     }
