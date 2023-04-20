@@ -10,7 +10,7 @@ use WordCounter\Helper\ScriptRegistry;
 
 final class WordCounter {
 
-    private array $supportedUnicodeMap = [];
+    private array $supportedCharacterMap = [];
 
     public function process(string $text, bool $exportWords = false, string $encoding = 'UTF-8'): WordCounterResult {
         $wordCount = 0;
@@ -18,8 +18,8 @@ final class WordCounter {
 
         $textAnalyzer = new TextAnalyzer($text, $encoding);
         $textAnalyzer->analyze(
-            function (int $currentCharacterCode, ?int $previousCharacterCode): bool {
-                return $this->onCharacterMatch($currentCharacterCode, $previousCharacterCode);
+            function (string $currentCharacter, ?string $previousCharacter): bool {
+                return $this->onCharacterMatch($currentCharacter, $previousCharacter);
             },
             static function (string $word) use (&$wordCount, &$wordList, $exportWords): void {
                 $wordCount++;
@@ -44,28 +44,29 @@ final class WordCounter {
     }
 
     public function registerScript(ScriptInterface $script): self {
-        $unicodeList = $script->getCharacterUnicodeCollection()->getList();
+        $characters = $script->getCharacterCollection()->get();
 
-        foreach ($unicodeList as $unicode) {
-            if (!isset($this->supportedUnicodeMap[$unicode])) {
-                $this->supportedUnicodeMap[$unicode] = [];
+        foreach ($characters as $character) {
+            if (!isset($this->supportedCharacterMap[$character])) {
+                $this->supportedCharacterMap[$character] = [];
             }
 
-            $this->supportedUnicodeMap[$unicode][] = $script;
+            $this->supportedCharacterMap[$character][] = $script;
         }
 
         return $this;
     }
 
-    private function onCharacterMatch(int $currentCharacterCode, ?int $previousCharacterCode): bool {
+    private function onCharacterMatch(string $currentCharacterCode, ?string $previousCharacterCode): bool {
         if (
             $currentCharacterCode === NonPrintableCharacters::ZWJ
             && $previousCharacterCode
-            && isset($this->supportedUnicodeMap[$previousCharacterCode])
+            && isset($this->supportedCharacterMap[$previousCharacterCode])
         ) {
+
             return true;
         }
 
-        return isset($this->supportedUnicodeMap[$currentCharacterCode]);
+        return isset($this->supportedCharacterMap[$currentCharacterCode]);
     }
 }

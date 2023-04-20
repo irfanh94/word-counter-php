@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace WordCounter;
 
 use Closure;
-use function mb_ord;
+
 use function mb_strlen;
 use function mb_substr;
 
@@ -22,15 +22,14 @@ final class TextAnalyzer {
     }
 
     public function analyze(Closure $onCharacterMatch, ?Closure $onWordDetect = null): void {
-        $previousCharacterCode = null;
+        $previousCharacter = null;
         $inWord = false;
         $word = '';
 
         for ($characterIndex = 0; $characterIndex < $this->textLength; $characterIndex++) {
             $currentCharacter = mb_substr($this->text, $characterIndex, 1, $this->textEncoding);
-            $currentCharacterCode = mb_ord($currentCharacter);
 
-            $isCharacterMatch = $onCharacterMatch($currentCharacterCode, $previousCharacterCode) === true;
+            $isCharacterMatch = $onCharacterMatch($currentCharacter, $previousCharacter) === true;
 
             if ($isCharacterMatch) {
                 $inWord = true;
@@ -47,7 +46,7 @@ final class TextAnalyzer {
                 $word .= $currentCharacter;
             }
 
-            $previousCharacterCode = $currentCharacterCode;
+            $previousCharacter = $currentCharacter;
         }
 
         if ($inWord && $onWordDetect) {
