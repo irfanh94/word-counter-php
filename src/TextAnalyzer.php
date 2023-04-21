@@ -6,19 +6,12 @@ namespace WordCounter;
 
 use Closure;
 
-use function mb_strlen;
-use function mb_substr;
-
 final class TextAnalyzer {
 
-    private string $text;
-    private int $textLength;
-    private string $textEncoding;
+    private string $textHexadecimals;
 
-    public function __construct(string $text, string $textEncoding = 'UTF-8') {
-        $this->text = $text;
-        $this->textLength = mb_strlen($text, $textEncoding);
-        $this->textEncoding = $textEncoding;
+    public function __construct(string $text) {
+        $this->textHexadecimals = bin2hex($text);
     }
 
     public function analyze(Closure $onCharacterMatch, ?Closure $onWordDetect = null): void {
@@ -26,9 +19,8 @@ final class TextAnalyzer {
         $inWord = false;
         $word = '';
 
-        for ($characterIndex = 0; $characterIndex < $this->textLength; $characterIndex++) {
-            $currentCharacter = mb_substr($this->text, $characterIndex, 1, $this->textEncoding);
-
+        do {
+            $currentCharacter = $this->takeNextCharacterFromTextHexadecimals();
             $isCharacterMatch = $onCharacterMatch($currentCharacter, $previousCharacter) === true;
 
             if ($isCharacterMatch) {
@@ -47,11 +39,40 @@ final class TextAnalyzer {
             }
 
             $previousCharacter = $currentCharacter;
-        }
+        } while ($this->textHexadecimals !== '');
 
         if ($inWord && $onWordDetect) {
             $onWordDetect($word);
         }
+    }
+
+    public function takeNextHexFromTextHexadecimals(): string {
+        $hex = substr($this->textHexadecimals, 0, 2);
+        $this->textHexadecimals = substr($this->textHexadecimals, 2);
+
+        return $hex;
+    }
+
+    public function takeNextCharacterFromTextHexadecimals(): string {
+        $hex = $this->takeNextHexFromTextHexadecimals();
+        $dec = hexdec($hex);
+        $numberOfProceedingHex = 0;
+
+        if ($dec >= 128) {
+            if (($dec >> 5) === 6) {
+                $numberOfProceedingHex = 1;
+            } elseif (($dec >> 4) === 14) {
+                $numberOfProceedingHex = 2;
+            } elseif (($dec >> 3) === 30) {
+                $numberOfProceedingHex = 3;
+            }
+        }
+
+        for ($a = 0; $a < $numberOfProceedingHex; $a++) {
+            $hex .= $this->takeNextHexFromTextHexadecimals();
+        }
+
+        return hex2bin($hex);
     }
 
 }

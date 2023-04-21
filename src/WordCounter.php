@@ -12,11 +12,11 @@ final class WordCounter {
 
     private array $supportedCharacterMap = [];
 
-    public function process(string $text, bool $exportWords = false, string $encoding = 'UTF-8'): WordCounterResult {
+    public function process(string $text, bool $exportWords = false): WordCounterResult {
         $wordCount = 0;
         $wordList = [];
 
-        $textAnalyzer = new TextAnalyzer($text, $encoding);
+        $textAnalyzer = new TextAnalyzer($text);
         $textAnalyzer->analyze(
             function (string $currentCharacter, ?string $previousCharacter): bool {
                 return $this->onCharacterMatch($currentCharacter, $previousCharacter);

@@ -22,8 +22,8 @@ class LatinScriptTest extends TestCase {
     public function testWordCounter(string $text, int $expectedCount, array $expectedWords): void {
         $wordCounterResult = $this->wordCounter->process($text, true);
 
-        $this->assertEquals($expectedCount, $wordCounterResult->getCount());
         $this->assertEquals($expectedWords, $wordCounterResult->getWords());
+        $this->assertEquals($expectedCount, $wordCounterResult->getCount());
     }
 
     public static function wordCounterData(): array {
