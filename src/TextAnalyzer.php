@@ -6,12 +6,16 @@ namespace WordCounter;
 
 use Closure;
 
+use function ord;
+use function pack;
+
 final class TextAnalyzer {
 
-    private string $textHexadecimals;
+    private string $text;
+    private int $currentProcessingCharacterIndex = 0;
 
     public function __construct(string $text) {
-        $this->textHexadecimals = bin2hex($text);
+        $this->text = $text;
     }
 
     public function analyze(Closure $onCharacterMatch, ?Closure $onWordDetect = null): void {
@@ -20,7 +24,12 @@ final class TextAnalyzer {
         $word = '';
 
         do {
-            $currentCharacter = $this->takeNextCharacterFromTextHexadecimals();
+            $currentCharacter = $this->takeNextCharacterFromText();
+
+            if ($currentCharacter === null) {
+                break;
+            }
+
             $isCharacterMatch = $onCharacterMatch($currentCharacter, $previousCharacter) === true;
 
             if ($isCharacterMatch) {
@@ -39,23 +48,35 @@ final class TextAnalyzer {
             }
 
             $previousCharacter = $currentCharacter;
-        } while ($this->textHexadecimals !== '');
+        } while (true);
 
         if ($inWord && $onWordDetect) {
             $onWordDetect($word);
         }
+
+        $this->currentProcessingCharacterIndex = 0;
     }
 
-    public function takeNextHexFromTextHexadecimals(): string {
-        $hex = substr($this->textHexadecimals, 0, 2);
-        $this->textHexadecimals = substr($this->textHexadecimals, 2);
+    public function takeNextByteFromText(): ?int {
+        $char = $this->text[$this->currentProcessingCharacterIndex] ?? null;
 
-        return $hex;
+        if ($char === null) {
+            return null;
+        }
+
+        $this->currentProcessingCharacterIndex++;
+
+        return ord($char);
     }
 
-    public function takeNextCharacterFromTextHexadecimals(): string {
-        $hex = $this->takeNextHexFromTextHexadecimals();
-        $dec = hexdec($hex);
+    public function takeNextCharacterFromText(): ?string {
+        $dec = $this->takeNextByteFromText();
+
+        if ($dec === null) {
+            return null;
+        }
+
+        $bytes = [$dec];
         $numberOfProceedingHex = 0;
 
         if ($dec >= 128) {
@@ -69,10 +90,14 @@ final class TextAnalyzer {
         }
 
         for ($a = 0; $a < $numberOfProceedingHex; $a++) {
-            $hex .= $this->takeNextHexFromTextHexadecimals();
+            $proceedingByte = $this->takeNextByteFromText();
+
+            if ($proceedingByte !== null) {
+                $bytes[] = $proceedingByte;
+            }
         }
 
-        return hex2bin($hex);
+        return pack('C*', ...$bytes);
     }
 
 }

@@ -16,8 +16,7 @@
   ],
   "homepage": "https://github.com/irfanh94/word-count-php",
   "require": {
-    "php": ">=7.4",
-    "ext-mbstring": "*"
+    "php": ">=7.4"
   },
   "require-dev": {
     "phpunit/phpunit": ">=9.6",
