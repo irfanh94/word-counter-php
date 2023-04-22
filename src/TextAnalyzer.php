@@ -20,17 +20,23 @@ final class TextAnalyzer {
 
     public function analyze(Closure $onCharacterMatch, ?Closure $onWordDetect = null): void {
         $previousCharacter = null;
+        $currentCharacter = $this->takeNextCharacterFromText();
+
+        if ($currentCharacter === null) {
+            return;
+        }
+
         $inWord = false;
         $word = '';
 
         do {
-            $currentCharacter = $this->takeNextCharacterFromText();
+            $nextCharacter = $this->takeNextCharacterFromText();
 
             if ($currentCharacter === null) {
                 break;
             }
 
-            $isCharacterMatch = $onCharacterMatch($currentCharacter, $previousCharacter) === true;
+            $isCharacterMatch = $onCharacterMatch($previousCharacter, $currentCharacter, $nextCharacter) === true;
 
             if ($isCharacterMatch) {
                 $inWord = true;
@@ -48,6 +54,7 @@ final class TextAnalyzer {
             }
 
             $previousCharacter = $currentCharacter;
+            $currentCharacter = $nextCharacter;
         } while (true);
 
         if ($inWord && $onWordDetect) {

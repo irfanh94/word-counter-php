@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace WordCounter\Helper;
 
 use WordCounter\Script\ArabicScript;
+use WordCounter\Script\CyrillicScript;
 use WordCounter\Script\LatinScript;
 
 class ScriptRegistry {
@@ -13,6 +14,7 @@ class ScriptRegistry {
         return [
             new LatinScript(),
             new ArabicScript(),
+            new CyrillicScript(),
         ];
     }
 

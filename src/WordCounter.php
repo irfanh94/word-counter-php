@@ -8,9 +8,15 @@ use WordCounter\Contract\ScriptInterface;
 use WordCounter\Helper\NonPrintableCharacters;
 use WordCounter\Helper\ScriptRegistry;
 
+use function in_array;
+
 final class WordCounter {
 
     private array $supportedCharacterMap = [];
+    private array $joiningCharacters = [
+        NonPrintableCharacters::ZWNJ,
+        NonPrintableCharacters::ZWJ,
+    ];
 
     public function process(string $text, bool $exportWords = false): WordCounterResult {
         $wordCount = 0;
@@ -18,8 +24,8 @@ final class WordCounter {
 
         $textAnalyzer = new TextAnalyzer($text);
         $textAnalyzer->analyze(
-            function (string $currentCharacter, ?string $previousCharacter): bool {
-                return $this->onCharacterMatch($currentCharacter, $previousCharacter);
+            function (?string $previousCharacter, string $currentCharacter, ?string $nextCharacter): bool {
+                return $this->onCharacterMatch($previousCharacter, $currentCharacter, $nextCharacter);
             },
             static function (string $word) use (&$wordCount, &$wordList, $exportWords): void {
                 $wordCount++;
@@ -57,16 +63,26 @@ final class WordCounter {
         return $this;
     }
 
-    private function onCharacterMatch(string $currentCharacterCode, ?string $previousCharacterCode): bool {
-        if (
-            $currentCharacterCode === NonPrintableCharacters::ZWJ
-            && $previousCharacterCode
-            && isset($this->supportedCharacterMap[$previousCharacterCode])
-        ) {
+    private function onCharacterMatch(
+        ?string $previousCharacter,
+        string $currentCharacter,
+        ?string $nextCharacter
+    ): bool {
+        $previousCharacterMatched = $previousCharacter !== null && isset($this->supportedCharacterMap[$previousCharacter]);
+        $nextCharacterMatched = $nextCharacter !== null && isset($this->supportedCharacterMap[$nextCharacter]);
 
+        if (isset($this->supportedCharacterMap[$currentCharacter])) {
             return true;
         }
 
-        return isset($this->supportedCharacterMap[$currentCharacterCode]);
+        if (
+            $previousCharacterMatched
+            && $nextCharacterMatched
+            && in_array($currentCharacter, $this->joiningCharacters, true)
+        ) {
+            return true;
+        }
+
+        return false;
     }
 }

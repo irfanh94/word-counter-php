@@ -10,7 +10,7 @@ use WordCounter\TextAnalyzer;
 class TextAnalyzerTest extends TestCase {
 
     public function testCanAnalyzeText(): void {
-        $expected = 'aαаاअ一あㅏ龍b藤บשcصЩ🤯🦄麻漢락憂';
+        $expected = 'a‍αаاअ一あㅏ龍b藤บשcصЩ🤯🦄麻漢락憂';
         $processed = '';
 
         $textAnalyzer = new TextAnalyzer($expected);
