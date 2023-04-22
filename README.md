@@ -38,3 +38,9 @@ $wordCounterResponse = $wordCounter->process("This is amazing", true);
 $numberOfWords = $wordCounterResponse->getCount();
 $listOfWords = $wordCounterResponse->getWords();
 ```
+
+## Benchmark for 10k words (67kb)
+| bench class      | bench method                | memory peak | average time |
+|------------------|-----------------------------|-------------|--------------|
+| WordCounterBench | benchCounter                | 1,635,216b  | 21,114.000μs |
+| WordCounterBench | benchCounterWithWordsExport | 2,115,400b  | 22,118.000μs |

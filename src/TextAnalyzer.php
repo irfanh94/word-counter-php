@@ -77,19 +77,19 @@ final class TextAnalyzer {
         }
 
         $bytes = [$dec];
-        $numberOfProceedingHex = 0;
+        $numberOfProceedingBytes = 0;
 
         if ($dec >= 128) {
             if (($dec >> 5) === 6) {
-                $numberOfProceedingHex = 1;
+                $numberOfProceedingBytes = 1;
             } elseif (($dec >> 4) === 14) {
-                $numberOfProceedingHex = 2;
+                $numberOfProceedingBytes = 2;
             } elseif (($dec >> 3) === 30) {
-                $numberOfProceedingHex = 3;
+                $numberOfProceedingBytes = 3;
             }
         }
 
-        for ($a = 0; $a < $numberOfProceedingHex; $a++) {
+        for ($a = 0; $a < $numberOfProceedingBytes; $a++) {
             $proceedingByte = $this->takeNextByteFromText();
 
             if ($proceedingByte !== null) {
