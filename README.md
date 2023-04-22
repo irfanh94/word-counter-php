@@ -1,9 +1,10 @@
 ## About
-Introducing our new PHP word-count package, a powerful tool for accurately counting the number of words in any text input. This package currently supports 2 language scripts and is highly customizable, allowing for exclusion of certain words or phrases from the count and options for case sensitivity and stemming.
+Introducing our new PHP word-count package, a powerful tool for accurately counting the number of words in any text input. This package currently supports 3 language scripts and is highly customizable, allowing for exclusion of certain words or phrases from the count and options for case sensitivity and stemming.
 
 ## Supported scripts
  - Latin
  - Arabic
+ - Cyrillic
 
 
 ## Installation & usage with composer
