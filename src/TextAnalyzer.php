@@ -6,12 +6,16 @@ namespace WordCounter;
 
 use Closure;
 
+use function ord;
+use function pack;
+
 final class TextAnalyzer {
 
-    private string $textHexadecimals;
+    private string $text;
+    private int $currentProcessingCharacterIndex = 0;
 
     public function __construct(string $text) {
-        $this->textHexadecimals = bin2hex($text);
+        $this->text = $text;
     }
 
     public function analyze(Closure $onCharacterMatch, ?Closure $onWordDetect = null): void {
@@ -20,7 +24,12 @@ final class TextAnalyzer {
         $word = '';
 
         do {
-            $currentCharacter = $this->takeNextCharacterFromTextHexadecimals();
+            $currentCharacter = $this->takeNextCharacterFromText();
+
+            if ($currentCharacter === null) {
+                break;
+            }
+
             $isCharacterMatch = $onCharacterMatch($currentCharacter, $previousCharacter) === true;
 
             if ($isCharacterMatch) {
@@ -39,40 +48,56 @@ final class TextAnalyzer {
             }
 
             $previousCharacter = $currentCharacter;
-        } while ($this->textHexadecimals !== '');
+        } while (true);
 
         if ($inWord && $onWordDetect) {
             $onWordDetect($word);
         }
+
+        $this->currentProcessingCharacterIndex = 0;
     }
 
-    public function takeNextHexFromTextHexadecimals(): string {
-        $hex = substr($this->textHexadecimals, 0, 2);
-        $this->textHexadecimals = substr($this->textHexadecimals, 2);
+    public function takeNextByteFromText(): ?int {
+        $char = $this->text[$this->currentProcessingCharacterIndex] ?? null;
 
-        return $hex;
+        if ($char === null) {
+            return null;
+        }
+
+        $this->currentProcessingCharacterIndex++;
+
+        return ord($char);
     }
 
-    public function takeNextCharacterFromTextHexadecimals(): string {
-        $hex = $this->takeNextHexFromTextHexadecimals();
-        $dec = hexdec($hex);
-        $numberOfProceedingHex = 0;
+    public function takeNextCharacterFromText(): ?string {
+        $dec = $this->takeNextByteFromText();
+
+        if ($dec === null) {
+            return null;
+        }
+
+        $bytes = [$dec];
+        $numberOfProceedingBytes = 0;
 
         if ($dec >= 128) {
             if (($dec >> 5) === 6) {
-                $numberOfProceedingHex = 1;
+                $numberOfProceedingBytes = 1;
             } elseif (($dec >> 4) === 14) {
-                $numberOfProceedingHex = 2;
+                $numberOfProceedingBytes = 2;
             } elseif (($dec >> 3) === 30) {
-                $numberOfProceedingHex = 3;
+                $numberOfProceedingBytes = 3;
             }
         }
 
-        for ($a = 0; $a < $numberOfProceedingHex; $a++) {
-            $hex .= $this->takeNextHexFromTextHexadecimals();
+        for ($a = 0; $a < $numberOfProceedingBytes; $a++) {
+            $proceedingByte = $this->takeNextByteFromText();
+
+            if ($proceedingByte !== null) {
+                $bytes[] = $proceedingByte;
+            }
         }
 
-        return hex2bin($hex);
+        return pack('C*', ...$bytes);
     }
 
 }
