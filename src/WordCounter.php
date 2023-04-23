@@ -4,85 +4,127 @@ declare(strict_types=1);
 
 namespace WordCounter;
 
+use RuntimeException;
+use WordCounter\Collection\CharacterCollection;
+use WordCounter\Collection\Word;
+use WordCounter\Collection\WordCollection;
 use WordCounter\Contract\ScriptInterface;
-use WordCounter\Helper\NonPrintableCharacters;
+use WordCounter\Helper\CharacterJoiners;
 use WordCounter\Helper\ScriptRegistry;
-
-use function in_array;
+use WordCounter\Iterator\CharacterIterator;
 
 final class WordCounter {
 
     private array $supportedCharacterMap = [];
-    private array $joiningCharacters = [
-        NonPrintableCharacters::ZWNJ,
-        NonPrintableCharacters::ZWJ,
-    ];
+    private array $supportedJoinerMap = [];
 
     public function process(string $text, bool $exportWords = false): WordCounterResult {
         $wordCount = 0;
-        $wordList = [];
+        $wordList = new WordCollection();
 
-        $textAnalyzer = new TextAnalyzer($text);
-        $textAnalyzer->analyze(
-            function (?string $previousCharacter, string $currentCharacter, ?string $nextCharacter): bool {
-                return $this->onCharacterMatch($previousCharacter, $currentCharacter, $nextCharacter);
-            },
-            static function (string $word) use (&$wordCount, &$wordList, $exportWords): void {
-                $wordCount++;
+        $temporaryCharacters = '';
+        $temporaryCharacterCount = 0;
 
-                if ($exportWords) {
-                    $wordList[] = $word;
+        $characterIterator = new CharacterIterator($text);
+        $characterIterator->iterate(
+            function (?string $previousCharacter, string $currentCharacter, ?string $nextCharacter)
+            use (&$temporaryCharacters, &$temporaryCharacterCount, &$wordCount, &$wordList, $exportWords): void {
+                if (!$this->isCharacterMatch($previousCharacter, $currentCharacter, $nextCharacter)) {
+                    if (!empty($temporaryCharacters)) {
+                        self::saveWord($wordCount, $wordList, $temporaryCharacters, $temporaryCharacterCount, $exportWords);
+                    }
+                    return;
                 }
+
+                $temporaryCharacters .= $currentCharacter;
+                $temporaryCharacterCount++;
             }
         );
+
+        if (!empty($temporaryCharacters)) {
+            self::saveWord($wordCount, $wordList, $temporaryCharacters, $temporaryCharacterCount, $exportWords);
+        }
+
 
         return new WordCounterResult($wordCount, $wordList);
     }
 
-    public function registerAllScriptsFromRegistry(): self {
-        $supportedScripts = ScriptRegistry::getAllScripts();
+    public function registerJoiners(CharacterCollection $characterCollection, bool $overwrite = false): self {
+        if ($overwrite) {
+            $this->supportedJoinerMap = [];
+        }
 
-        foreach ($supportedScripts as $supportedScript) {
-            $this->registerScript($supportedScript);
+        foreach ($characterCollection->get() as $character) {
+            $this->supportedJoinerMap[$character] = 1;
         }
 
         return $this;
     }
 
-    public function registerScript(ScriptInterface $script): self {
+    public function registerScript(ScriptInterface $script, bool $overwrite = false): self {
         $characters = $script->getCharacterCollection()->get();
 
+        if ($overwrite) {
+            $this->removeScript($script);
+        }
+
         foreach ($characters as $character) {
-            if (!isset($this->supportedCharacterMap[$character])) {
-                $this->supportedCharacterMap[$character] = [];
+            if (isset($this->supportedCharacterMap[$character])) {
+                throw new RuntimeException("Character \"{$character}\" (x". bin2hex($character) .") already registered in: ". get_class($this->supportedCharacterMap[$character]));
             }
 
-            $this->supportedCharacterMap[$character][] = $script;
+            $this->supportedCharacterMap[$character] = $script;
         }
 
         return $this;
     }
 
-    private function onCharacterMatch(
+    public function removeScript(ScriptInterface $script): self {
+        foreach ($this->supportedCharacterMap as $supportedCharacter => $supportedScript) {
+            if ($supportedScript->getName() === $script->getName()) {
+                unset($this->supportedCharacterMap[$supportedCharacter]);
+            }
+        }
+
+        return $this;
+    }
+
+    private function isCharacterMatch(
         ?string $previousCharacter,
         string $currentCharacter,
         ?string $nextCharacter
     ): bool {
-        $previousCharacterMatched = $previousCharacter !== null && isset($this->supportedCharacterMap[$previousCharacter]);
-        $nextCharacterMatched = $nextCharacter !== null && isset($this->supportedCharacterMap[$nextCharacter]);
-
         if (isset($this->supportedCharacterMap[$currentCharacter])) {
             return true;
         }
 
-        if (
-            $previousCharacterMatched
-            && $nextCharacterMatched
-            && in_array($currentCharacter, $this->joiningCharacters, true)
-        ) {
-            return true;
+        return isset(
+            $this->supportedCharacterMap[$previousCharacter],
+            $this->supportedCharacterMap[$nextCharacter],
+            $this->supportedJoinerMap[$currentCharacter]
+        );
+    }
+
+    public static function buildWithDefaults(): WordCounter {
+        $wordCounter = new self();
+        $wordCounter->registerJoiners((new CharacterJoiners())->getCharacterCollection());
+
+        $supportedScripts = ScriptRegistry::getAllScripts();
+        foreach ($supportedScripts as $supportedScript) {
+            $wordCounter->registerScript($supportedScript);
         }
 
-        return false;
+        return $wordCounter;
+    }
+
+    private static function saveWord(int &$wordCount, WordCollection $wordCollection, string &$characters, int &$characterCount, bool $exportWords): void {
+        $wordCount++;
+
+        if ($exportWords) {
+            $wordCollection->add(new Word($characters, $characterCount));
+        }
+
+        $characters = '';
+        $characterCount = 0;
     }
 }

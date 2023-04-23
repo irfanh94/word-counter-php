@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace WordCounter;
 
+use WordCounter\Collection\WordCollection;
+
 final class WordCounterResult {
 
     private int $count;
-    private array $words;
+    private ?WordCollection $words;
 
-    public function __construct(int $count = 0, array $words = []) {
+    public function __construct(int $count = 0, ?WordCollection $words = null) {
         $this->count = $count;
         $this->words = $words;
     }
@@ -18,7 +20,7 @@ final class WordCounterResult {
         return $this->count;
     }
 
-    public function getWords(): array {
+    public function getWords(): ?WordCollection {
         return $this->words;
     }
 

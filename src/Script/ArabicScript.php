@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace WordCounter\Script;
 
-use WordCounter\CharacterCollection;
+use WordCounter\Collection\CharacterCollection;
 use WordCounter\Contract\ScriptInterface;
 
 class ArabicScript implements ScriptInterface {
@@ -12,8 +12,7 @@ class ArabicScript implements ScriptInterface {
     private CharacterCollection $characterCollection;
 
     public function __construct() {
-        $this->characterCollection = new CharacterCollection();
-        $this->characterCollection->add([
+        $this->characterCollection = new CharacterCollection([
             // numbers
             '٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩',
 
@@ -41,6 +40,10 @@ class ArabicScript implements ScriptInterface {
             'ࣣ', 'ࣤ', 'ࣥ', 'ࣦ', 'ࣧ', 'ࣨ', 'ࣩ', '࣪', '࣫', '࣬', '࣭', '࣮', '࣯', 'ࣰ', 'ࣱ', 'ࣲ', 'ࣳ', 'ࣴ', 'ࣵ', 'ࣶ', 'ࣷ',
             'ࣸ', 'ࣹ', 'ࣺ', 'ࣻ', 'ࣼ', 'ࣽ', 'ࣾ', 'ࣿ',
         ]);
+    }
+
+    public function getName(): string {
+        return 'Arabic';
     }
 
     public function getCharacterCollection(): CharacterCollection {

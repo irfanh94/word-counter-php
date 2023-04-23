@@ -14,15 +14,14 @@ class CyrillicScriptTest extends TestCase {
     protected function setUp(): void {
         parent::setUp();
 
-        $this->wordCounter = new WordCounter();
-        $this->wordCounter->registerAllScriptsFromRegistry();
+        $this->wordCounter = WordCounter::buildWithDefaults();
     }
 
     /** @dataProvider wordCounterData */
     public function testWordCounter(string $text, int $expectedCount, array $expectedWords): void {
         $wordCounterResult = $this->wordCounter->process($text, true);
 
-        $this->assertEquals($expectedWords, $wordCounterResult->getWords());
+        $this->assertEquals($expectedWords, $wordCounterResult->getWords()->toArray());
         $this->assertEquals($expectedCount, $wordCounterResult->getCount());
     }
 
@@ -74,67 +73,75 @@ class CyrillicScriptTest extends TestCase {
             ],
             'serbianLanguage' => [
                 'text' => 'Живела-била‍Љубица‌12',
-                'expectedCount' => 2,
+                'expectedCount' => 3,
                 'expectedWords' => [
                     'Живела',
-                    'била‍Љубица‌12'
+                    'била‍Љубица',
+                    '12'
                 ]
             ],
             'macedonianLanguage' => [
                 'text' => 'Живеела-била‍Магдалена‌34',
-                'expectedCount' => 2,
+                'expectedCount' => 3,
                 'expectedWords' => [
                     'Живеела',
-                    'била‍Магдалена‌34'
+                    'била‍Магдалена',
+                    '34'
                 ]
             ],
             'bulgarianLanguage' => [
                 'text' => 'Живеела-била‍Мария‌56',
-                'expectedCount' => 2,
+                'expectedCount' => 3,
                 'expectedWords' => [
                     'Живеела',
-                    'била‍Мария‌56'
+                    'била‍Мария',
+                    '56'
                 ]
             ],
             'bashkirLanguage' => [
-                'text' => 'Уҡба-муҡба‍Әлминур‍78',
-                'expectedCount' => 2,
+                'text' => 'Уҡба-муҡба‍Әлминур‌78',
+                'expectedCount' => 3,
                 'expectedWords' => [
                     'Уҡба',
-                    'муҡба‍Әлминур‍78'
+                    'муҡба‍Әлминур',
+                    '78'
                 ]
             ],
             'chukchiLanguage' => [
                 'text' => 'Ху-ху-чучча‍Тырыппын‌90',
-                'expectedCount' => 3,
+                'expectedCount' => 4,
                 'expectedWords' => [
                     'Ху',
                     'ху',
-                    'чучча‍Тырыппын‌90'
+                    'чучча‍Тырыппын',
+                    '90'
                 ]
             ],
             'khakasLanguage' => [
                 'text' => 'Туруу-туруу‍Алтынай‌67',
-                'expectedCount' => 2,
+                'expectedCount' => 3,
                 'expectedWords' => [
                     'Туруу',
-                    'туруу‍Алтынай‌67'
+                    'туруу‍Алтынай',
+                    '67'
                 ]
             ],
             'ossetianLanguage' => [
                 'text' => 'Дзæудзин-пæрис‍Ирæна‌23',
-                'expectedCount' => 2,
+                'expectedCount' => 3,
                 'expectedWords' => [
                     'Дзæудзин',
-                    'пæрис‍Ирæна‌23'
+                    'пæрис‍Ирæна',
+                    '23'
                 ]
             ],
             'abhkazLanguage' => [
                 'text' => 'Аи-аиаа‍Маргарита‌45',
-                'expectedCount' => 2,
+                'expectedCount' => 3,
                 'expectedWords' => [
                     'Аи',
-                    'аиаа‍Маргарита‌45'
+                    'аиаа‍Маргарита',
+                    '45'
                 ]
             ]
         ];
