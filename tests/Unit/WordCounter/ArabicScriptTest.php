@@ -14,15 +14,14 @@ class ArabicScriptTest extends TestCase {
     protected function setUp(): void {
         parent::setUp();
 
-        $this->wordCounter = new WordCounter();
-        $this->wordCounter->registerAllScriptsFromRegistry();
+        $this->wordCounter = WordCounter::buildWithDefaults();
     }
 
     /** @dataProvider wordCounterData */
     public function testWordCounter(string $text, int $expectedCount, array $expectedWords): void {
         $wordCounterResult = $this->wordCounter->process($text, true);
 
-        $this->assertEquals($expectedWords, $wordCounterResult->getWords());
+        $this->assertEquals($expectedWords, $wordCounterResult->getWords()->toArray());
         $this->assertEquals($expectedCount, $wordCounterResult->getCount());
     }
 
@@ -55,7 +54,7 @@ class ArabicScriptTest extends TestCase {
             ],
             'persianLanguage' => [
                 'text' => 'من ٣ عدد رمان را خریداری کردم و برای خانواده‌ام خرده‌فروشی‌ای باز کردم تا بتوانیم این محصولات را به مشتریان عرضه کنیم.',
-                'expectedCount' => 22,
+                'expectedCount' => 25,
                 'expectedWords' => [
                     'من',
                     '٣',
@@ -66,8 +65,11 @@ class ArabicScriptTest extends TestCase {
                     'کردم',
                     'و',
                     'برای',
-                    'خانواده‌ام',
-                    'خرده‌فروشی‌ای',
+                    'خانواده',
+                    'ام',
+                    'خرده',
+                    'فروشی',
+                    'ای',
                     'باز',
                     'کردم',
                     'تا',

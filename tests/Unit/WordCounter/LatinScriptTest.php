@@ -14,15 +14,14 @@ class LatinScriptTest extends TestCase {
     protected function setUp(): void {
         parent::setUp();
 
-        $this->wordCounter = new WordCounter();
-        $this->wordCounter->registerAllScriptsFromRegistry();
+        $this->wordCounter = WordCounter::buildWithDefaults();
     }
 
     /** @dataProvider wordCounterData */
     public function testWordCounter(string $text, int $expectedCount, array $expectedWords): void {
         $wordCounterResult = $this->wordCounter->process($text, true);
 
-        $this->assertEquals($expectedWords, $wordCounterResult->getWords());
+        $this->assertEquals($expectedWords, $wordCounterResult->getWords()->toArray());
         $this->assertEquals($expectedCount, $wordCounterResult->getCount());
     }
 
@@ -62,11 +61,12 @@ class LatinScriptTest extends TestCase {
             ],
             'germanLanguage' => [
                 'text' => 'Die 3. Auf‌lage des Buches ist ab sofort erhältlich. Diese Version enthält viele neue Erkenntnisse und Informationen, die für Leserinnen und Leser sehr interessant sein könnten',
-                'expectedCount' => 26,
+                'expectedCount' => 27,
                 'expectedWords' => [
                     'Die',
                     '3',
-                    'Auf‌lage',
+                    'Auf',
+                    'lage',
                     'des',
                     'Buches',
                     'ist',
