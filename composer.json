@@ -1,11 +1,13 @@
 {
-  "name": "irfanh94/word-count-php",
+  "name": "irfanh94/word-counter-php",
   "description": "Correct word count for all languages in PHP",
   "license": "MIT",
   "type": "library",
   "keywords": [
     "word",
+    "counter",
     "count",
+    "words",
     "php"
   ],
   "authors": [
@@ -14,7 +16,7 @@
       "homepage": "https://github.com/irfanh94"
     }
   ],
-  "homepage": "https://github.com/irfanh94/word-count-php",
+  "homepage": "https://github.com/irfanh94/word-counter-php",
   "require": {
     "php": ">=7.4"
   },
