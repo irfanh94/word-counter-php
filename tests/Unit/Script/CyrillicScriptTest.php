@@ -2,17 +2,18 @@
 
 declare(strict_types=1);
 
-namespace WordCounter\Script;
+namespace WordCounter\Tests\Unit\Script;
 
-use WordCounter\Collection\CharacterCollection;
-use WordCounter\Contract\ScriptInterface;
+use PHPUnit\Framework\TestCase;
+use WordCounter\Script\CyrillicScript;
 
-class CyrillicScript implements ScriptInterface {
+class CyrillicScriptTest extends TestCase {
 
-    private CharacterCollection $characterCollection;
+    public function testCharacters(): void {
+        $script = new CyrillicScript();
 
-    public function __construct() {
-        $this->characterCollection = new CharacterCollection([
+        self::assertEquals('Cyrillic', $script->getName());
+        self::assertEquals([
             'А', 'а', 'Б', 'б', 'В', 'в', 'Г', 'г', 'Д', 'д', 'Ђ', 'ђ', 'Е', 'е', 'Ё', 'ё',
             'Ж', 'ж', 'З', 'з', 'И', 'и', 'Й', 'й', 'К', 'к', 'Л', 'л', 'Љ', 'љ', 'М', 'м',
             'Н', 'н', 'Њ', 'њ', 'О', 'о', 'П', 'п', 'Р', 'р', 'С', 'с', 'Т', 'т', 'Ћ', 'ћ',
@@ -21,15 +22,7 @@ class CyrillicScript implements ScriptInterface {
             'І', 'і', 'Ї', 'ї', 'Є', 'є', 'Ѓ', 'ѓ', 'Ќ', 'ќ', 'Ә', 'ә', 'Ҡ', 'ҡ', 'Ӄ', 'ӄ',
             'Ө', 'ө', 'Ү', 'ү', 'Ӕ', 'ӕ', 'Ӣ', 'ӣ', 'Ӯ', 'ӯ',
             'ҧ',
-        ]);
-    }
-
-    public function getName(): string {
-        return 'Cyrillic';
-    }
-
-    public function getCharacterCollection(): CharacterCollection {
-        return $this->characterCollection;
+        ], $script->getCharacterCollection()->get());
     }
 
 }
