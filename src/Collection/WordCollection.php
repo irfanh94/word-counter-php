@@ -29,12 +29,12 @@ class WordCollection implements Iterator {
         ++$this->iteratorPosition;
     }
 
-    public function key(): mixed {
+    public function key(): int {
         return $this->iteratorPosition;
     }
 
     public function valid(): bool {
-        return isset($this->iteratorPosition);
+        return isset($this->items[$this->iteratorPosition]);
     }
 
     public function rewind(): void {
