@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace WordCounter\Collection;
 
 use function array_search;
+use function array_values;
 use function in_array;
 
 class CharacterCollection {
@@ -31,6 +32,8 @@ class CharacterCollection {
                 unset($this->characters[$index]);
             }
         }
+
+        $this->characters = array_values($this->characters);
     }
 
     public function get(): array {

@@ -2,17 +2,18 @@
 
 declare(strict_types=1);
 
-namespace WordCounter\Script;
+namespace WordCounter\Tests\Unit\Script;
 
-use WordCounter\Collection\CharacterCollection;
-use WordCounter\Contract\ScriptInterface;
+use PHPUnit\Framework\TestCase;
+use WordCounter\Script\LatinScript;
 
-class LatinScript implements ScriptInterface {
+class LatinScriptTest extends TestCase {
 
-    private CharacterCollection $characterCollection;
+    public function testCharacters(): void {
+        $script = new LatinScript();
 
-    public function __construct() {
-        $this->characterCollection = new CharacterCollection([
+        self::assertEquals('Latin', $script->getName());
+        self::assertEquals([
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
@@ -47,15 +48,7 @@ class LatinScript implements ScriptInterface {
             'ý', 'ÿ',
             'Ź', 'Ż', 'Ž',
             'ź', 'ż', 'ž',
-        ]);
-    }
-
-    public function getName(): string {
-        return 'Latin';
-    }
-
-    public function getCharacterCollection(): CharacterCollection {
-        return $this->characterCollection;
+        ], $script->getCharacterCollection()->get());
     }
 
 }
